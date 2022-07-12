@@ -11,22 +11,39 @@
 	<input message = "Enter the name of your main classs: "
 		addproperty = "mainClass"/>
 	
+	<echo>raspberry Pi IP = ${raspberrypi}</echo>
+	<echo>chosen class = ${mainClass}</echo>
+	
 	<property name = "raspberryfolder" value = "~"/>
 	<property name = "username" value = "pi" />
 	<property name = "password" value = "raspberry" />
 	
-	<target name="piRemote"></target>
+	<target name="piRemote">
 	
 	<jar destfile="test.jar" filesetmanifest = "mergewithoutmain">
 		<manifest>
 			<attribute name = "Main-Class" value = "Main"/>
-			<arritubte name = "Class-Path" value = "."/>
+			<!--	<attribute name = "Class-Path" value = "."/>	-->
  		</manifest>
-		<fileset dir = "${basedir}/bin"/>
+		<zipfileset excludes = "META-INF/*.SF" src = "${basedir}/lib/pi4j-core-1.3.jar"/>
 		<fileset dir = "${basedir}/lib"/>
 	</jar>
 	
 	<basename file="test.jar" property="jar.filename"/>
 	<echo>Found application ${jar.path}</echo>
+		
+	<echo>Copying app over to ${raspberrypi}:${raspberryfolder}/${jar.filename}</echo>
+	<scp todir = "${username}:${password}@${raspberrypi}:${raspberryfolder}" localfile = "test.jar"></scp>
+		
+	<echo>Starting the app on ${raspberrypi}:${raspberryfolder}/${jar.filename} in debug mode!</echo>
+	<sshexec 
+		command="java -jar test.jar" 
+		host="${raspberrypi}" 
+		username="${username}" 
+		password="${password}" 
+		trust = "true"
+		failonerror = "true"/>
+	
+	</target>
 	
 </project>
