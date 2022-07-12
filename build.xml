@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project default = "main target" name = "Robot ANT Build">
-    <target name = "main target">
-        <echo>executing main target...</echo>
-    </target>
+<project default = "piRemote" name = "Robot Remoting">
+    
+	<echo>${basedir}</echo>
+	<echo>${dir.buildfile}</echo>
+	
+	<input message = "Enter your robot's IP address:"
+		addproperty = "raspberrypi"/>
+	
+	<input message = "Enter the name of your main classs: "
+		addproperty = "mainClass"/>
+	
+	<property name = "raspberryfolder" value = "~"/>
+	<property name = "username" value = "pi" />
+	<property name = "password" value = "raspberry" />
+	
+	<target name="piRemote"></target>
+	
+	<jar destfile="test.jar" filesetmanifest = "mergewithoutmain">
+		<manifest>
+			<attribute name = "Main-Class" value = "Main"/>
+			<arritubte name = "Class-Path" value = "."/>
+ 		</manifest>
+		<fileset dir = "${basedir}/bin"/>
+		<fileset dir = "${basedir}/lib"/>
+	</jar>
+	
+	<basename file="test.jar" property="jar.filename"/>
+	<echo>Found application ${jar.path}</echo>
+	
 </project>
