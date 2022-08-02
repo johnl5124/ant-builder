@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project default = "piRemote" name = "Robot Remoting">
+<!-- include a default path for the build file to complete first -->
+
+<project>
     
+	<path id="build.classpath">
+		<pathelement path = "${basedir}/jsch-0.1.55.jar"></pathelement>
+		<pathelement path = "${basedir}/pi4j-core-1.3.jar"></pathelement>
+	</path>
+
+	<path id="jars">
+		<fileset dir="./lib" includes="**/*.jar"/>
+	</path>
+
+	<pathconvert property="mf.classpath" pathsep=" ">
+		<path refid="build.classpath"/>
+		<mapper>
+			<chainedmapper>
+				<flattenmapper/>
+				<globmapper from="*.jar" to="lib/*.jar"/>
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
+	<!-- deletes build folder (sourced and with a jar in it) to start a clean slate -->
+	<target name="clean">
+        <delete dir="build"/>
+    </target>
+
+	<target name="compile">
+        <mkdir dir="./build"/>
+        <javac srcdir="src" destdir="./build" classpathref = "jars" debug = "on"/>
+    </target>
+
+	<target name="run" depends = "compile">
+
 	<echo>${basedir}</echo>
 	<echo>${dir.buildfile}</echo>
 	
@@ -9,7 +42,7 @@
 		addproperty = "raspberrypi"/>
 	
 	<input message = "Enter the name of your main classs: "
-		addproperty = "mainClass"/>
+		addproperty = "main.class"/>
 	
 	<echo>raspberry Pi IP = ${raspberrypi}</echo>
 	<echo>chosen class = ${mainClass}</echo>
@@ -17,16 +50,17 @@
 	<property name = "raspberryfolder" value = "~"/>
 	<property name = "username" value = "pi" />
 	<property name = "password" value = "raspberry" />
-	
-	<target name="piRemote">
-	
-	<jar destfile="test.jar" filesetmanifest = "mergewithoutmain">
+
+	<jar destfile="./build/test.jar" filesetmanifest = "skip">
 		<manifest>
-			<attribute name = "Main-Class" value = "Main"/>
-			<!--	<attribute name = "Class-Path" value = "."/>	-->
+			<attribute name = "Main-Class" value = "${main.class}"/>
+			<attribute name = "Class-Path" value = "${mf.classpath}"/>
  		</manifest>
-		<zipfileset excludes = "META-INF/*.SF" src = "${basedir}/lib/pi4j-core-1.3.jar"/>
-		<fileset dir = "${basedir}/lib"/>
+
+		<zipgroupfileset dir="${basedir}" includes="*.jar"/>
+		<zipgroupfileset dir="${basedir}/lib" includes="*.jar"/>
+
+		<fileset dir = "${basedir}/lib/" includes = "**/*.jar"/>
 	</jar>
 	
 	<basename file="test.jar" property="jar.filename"/>
