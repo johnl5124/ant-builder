@@ -1,3 +1,4 @@
+import PrototypeTesting.PrototypeTesting.*;
 
 public class Main 
 {
@@ -5,12 +6,8 @@ public class Main
 	{
 		System.out.println("Basic Robot Movement Program...");
         
-        RobotMovement t1 = new RobotMovement();
+        TestRobot t1 = new TestRobot();
         
-        t1.forward();
-        
-        Thread.sleep(2000);
-        
-        t1.stop();
+        t1.setWheelVelocities(100, 100, 3000);
 	}
 }
