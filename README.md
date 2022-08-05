@@ -27,7 +27,8 @@ Updated: 05/08/2022
     - Ensure `<fileset>` points to where .class files (should be in .../target/classes are AND where .jar files (should be in /basedir/lib folder) are kept 
     - Also ensure that the jar (or `<zipfileset>`) excludes the correct dependency's manifest (`META-INF/*.SF`) files as this will throw `NoClassDefFound` exception
 - "Unable to access jarfile" || jar not found
-  - Can simply be down to inputting class/jar name in wrongly... this can also be caused by the build.xml if the `<jar destfile = "name of jar"` is changed 
+  - Can simply be down to inputting class/jar name in wrongly... this can also be caused by the build.xml if the `<jar destfile = "name of jar"` is changed
+  - Also wise to double check the path to the jar/classes is correct...
 
 
 
