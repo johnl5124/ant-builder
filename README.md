@@ -7,7 +7,8 @@ Updated: 05/08/2022
 - Build a Java project in Eclipse first
 - Then add lib folder and build.xml file into the root directory of a said project (mustn't change the code)
 - Next, on Eclipse (top bar) go "Window > Show View > Ant" this will bring up the Ant panel, allowing to execute Ant build files from within Eclipse
-- ELSE if you would like to run from cmd then it can be done by running "ant" within the same folder the build.xml file is in
+- ELSE if you would like to run from cmd then it can be done by running `ant` within the same folder the build.xml file is in
+  - The build.xml only has one target that it will default to running so just running `ant` works
 
 ## Connection Problems
 *If struggling to connect to the robot...*
