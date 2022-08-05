@@ -1,5 +1,3 @@
-package com.autoant;
-
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
 import com.pi4j.io.gpio.GpioController;
