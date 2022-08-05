@@ -8,6 +8,6 @@ public class Main
         
         TestRobot t1 = new TestRobot();
         
-        t1.setWheelVelocities(100, 100, 3000);
+        t1.setWheelVelocities(-100, 100, 2500);
 	}
 }

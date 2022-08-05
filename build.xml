@@ -4,87 +4,48 @@
 
 <project default = "run">
     
-	<path id="build.classpath">
-		<pathelement path = "${basedir}/lib/jsch-0.1.55.jar"></pathelement>
-		<pathelement path = "${basedir}/lib/pi4j-core-1.3.jar"></pathelement>
-		<pathelement path = "${basedir}/lib/PrototypeTesting.jar"></pathelement>
-	</path>
+	<echo>${basedir}</echo>
+	<echo>${dir.buildfile}</echo>
 	
-    <path id="libraries.path">    
-        <fileset dir="${basedir}/lib">
-            <include name="*.jar"/>
-        </fileset>
-    </path>
-
-	<path id="jars">
-		<fileset dir="./lib" includes="**/*.jar"/>
-	</path>
-
-	<pathconvert property="mf.classpath" pathsep=" ">
-		<path refid="build.classpath"/>
-		<mapper>
-			<chainedmapper>
-				<flattenmapper/>
-				<globmapper from="*.jar" to="lib/*.jar"/>
-			</chainedmapper>
-		</mapper>
-	</pathconvert>
-
-	<!-- deletes build folder (sourced and with a jar in it) to start a clean slate -->
-	<target name="clean">
-        <delete dir="build"/>
-    </target>
-
-	<target name="compile" depends = "clean">
-        <mkdir dir="./build"/>
-        <javac 
-        	srcdir="src" 
-        	destdir="./build" 
-        	classpathref = "jars" 
-        	debug = "on"/>
-    </target>
-
-	<target name="run" depends = "compile">
-		<echo>${basedir}</echo>
-		<echo>${dir.buildfile}</echo>
-		
-		<input message = "Enter your robot's IP address:"
-			addproperty = "raspberrypi"/>
-		
-		<input message = "Enter the name of your main classs: "
-			addproperty = "main.class"/>
-		
-		<echo>raspberry Pi IP = ${raspberrypi}</echo>
-		<echo>chosen class = ${main.class}</echo>
-		
-		<property name = "raspberryfolder" value = "/home/pi/Documents"/>
-		<property name = "username" value = "pi" />
-		<property name = "password" value = "raspberry" />
-		<property name = "dir.buildfile" value = "." />
-		<property name = "dir.workspace" value = "${basedir}" />
-		<property name = "dir.jarfile" value = "${basedir}/build" />
-		
-		<manifestclasspath property="manifest.classpath" jarfile="${jar.file}">
-			<classpath refid="libraries.path"/>
-		</manifestclasspath>
-		
-		<manifest file = "MANIFEST.MF">
-			<attribute name = "Main-Class" value = "${main.class}"/>
-			<attribute name = "Class-Path" value = "."/>
- 		</manifest>
+	<input message = "Enter your robot's IP address:"
+		addproperty = "raspberrypi"/>
 	
-		<jar destfile="./build/test.jar" filesetmanifest = "mergewithoutmain" basedir = "${basedir}/build" manifest = "MANIFEST.MF">			
-			<fileset dir = "${basedir}/build" includes = "**/*.class"></fileset>
-			<fileset dir = "${basedir}/lib/" includes = "**/*.jar"/>
+	<input message = "Enter the name of your main classs: "
+		addproperty = "main.class"/>
+	
+	<echo>raspberry Pi IP = ${raspberrypi}</echo>
+	<echo>chosen class = ${main.class}</echo>
+
+	<property name = "raspberryfolder" value = "/home/pi/Documents"/>
+	<property name = "username" value = "pi" />
+	<property name = "password" value = "raspberry" />
+	<property name = "dir.buildfile" value = "." />
+	<property name = "dir.workspace" value = "${basedir}" />
+	<property name = "dir.jarfile" value = "${basedir}/build" />
+	
+	<target name = "run">	
+		<jar destfile="./build/robotic-program.jar" filesetmanifest = "mergewithoutmain">	
+			<manifest>
+				<attribute name = "Main-Class" value = "${main.class}"/>
+				<attribute name = "Class-Path" value = "."/>
+	 		</manifest>
+			
+			<!-- tells jar creator to includes the compiled classes and the dependency jar files ... these must NOT change -->
+			<fileset dir = "${basedir}/target/classes" includes = "**/*.class"></fileset>
+			<fileset dir = "${basedir}/lib" includes = "**/*.jar"/>
+			
+			<!-- excludes dependency's manifests ... important for avoiding NoClassDef exception -->
+			<zipfileset excludes = "META-INF/*.SF" src = "${basedir}/lib/PrototypingTest1.0.jar"/>
+			<zipfileset excludes = "META-INF/*.SF" src = "${basedir}/lib/jrpicam-1.1.1.jar"/>
+			<zipfileset excludes = "META-INF/*.SF" src = "${basedir}/lib/pi4j-core-1.3.jar"/>
 		</jar>
 		
-		<basename file="test.jar" property="jar.filename"/>
+		<basename file="robotic-program.jar" property="jar.filename"/>
 		<echo>Found application ${jar.path}</echo>
 			
 		<echo>Copying app over to ${raspberrypi}:${raspberryfolder}/${jar.filename}</echo>
-		<!-- (note: default port 22) I can connect... sometimes ||| localfile = "${basedir}/build/test.jar" -->
 		<scp 
-			file = "${basedir}/build/test.jar"
+			file = "${basedir}/build/robotic-program.jar"
 			todir = "${username}:${password}@${raspberrypi}:${raspberryfolder}" 
 			failonerror = "true"
 			sftp="true"
@@ -92,7 +53,7 @@
 			
 		<echo>Starting the app on ${raspberrypi}:${raspberryfolder}/${jar.filename} in debug mode!</echo>
 		<sshexec 
-			command="java -jar test.jar" 
+			command="java -jar /home/pi/Documents/robotic-program.jar" 
 			host="${raspberrypi}" 
 			username="${username}" 
 			password="${password}" 	
