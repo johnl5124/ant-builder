@@ -12,12 +12,9 @@ Updated: 05/08/2022
 
 ## Connection Problems
 *If struggling to connect to the robot...*
-
 - Check that you are on the **same network** - try pinging your robot's IP (`ping [ip of robot]`)
   - If the ping fails then double check yours and the robot's network settings...
-
 - Robot's ssh settings must be turned on - the Raspberry Pi model 4's ssh is disabled by default, see [here](https://phoenixnap.com/kb/enable-ssh-raspberry-pi) for details
-
 - Ensure robot details are correct (check ip on the robot via `ifconfig` in a terminal and look at `wlan0`)
 
 ## Pathing Problems 
