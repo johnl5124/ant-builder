@@ -3,27 +3,26 @@
 <!-- include a default path for the build file to complete first -->
 
 <project default = "run">
-    
-	<echo>${basedir}</echo>
-	<echo>${dir.buildfile}</echo>
-	
-	<input message = "Enter your robot's IP address:"
-		addproperty = "raspberrypi"/>
-	
-	<input message = "Enter the name of your main classs: "
-		addproperty = "main.class"/>
-	
-	<echo>raspberry Pi IP = ${raspberrypi}</echo>
-	<echo>chosen class = ${main.class}</echo>
-
-	<property name = "raspberryfolder" value = "/home/pi/Documents"/>
-	<property name = "username" value = "pi" />
-	<property name = "password" value = "raspberry" />
-	<property name = "dir.buildfile" value = "." />
-	<property name = "dir.workspace" value = "${basedir}" />
-	<property name = "dir.jarfile" value = "${basedir}/build" />
-	
 	<target name = "run">	
+		<echo>${basedir}</echo>
+		<echo>${dir.buildfile}</echo>
+		
+		<input message = "Enter your robot's IP address:"
+			addproperty = "raspberrypi"/>
+		
+		<input message = "Enter the name of your main classs: "
+			addproperty = "main.class"/>
+		
+		<echo>raspberry Pi IP = ${raspberrypi}</echo>
+		<echo>chosen class = ${main.class}</echo>
+	
+		<property name = "raspberryfolder" value = "/home/pi/Documents"/>
+		<property name = "username" value = "pi" />
+		<property name = "password" value = "raspberry" />
+		<property name = "dir.buildfile" value = "." />
+		<property name = "dir.workspace" value = "${basedir}" />
+		<property name = "dir.jarfile" value = "${basedir}/build" />
+
 		<jar destfile="./build/robotic-program.jar" filesetmanifest = "mergewithoutmain">	
 			<manifest>
 				<attribute name = "Main-Class" value = "${main.class}"/>
