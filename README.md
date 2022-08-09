@@ -21,6 +21,7 @@ Updated: 05/08/2022
 - NoClassDefFound || ClassNotFound
   - These should not occur unless the build.xml has been changed... it relates to class or jar files not being able to be found at runtime
   - If they do occur - look at build.xml file's jar creation section:
+    - The class paths should be looked at every time it is loaded into a new workspace... as the referenced libraries will be different and cause the compiler to not run, therefore making the Java Jar almsot empty...
     - Ensure `<fileset>` points to where .class files (should be in .../target/classes are AND where .jar files (should be in /basedir/lib folder) are kept 
     - Also ensure that the jar (or `<zipfileset>`) excludes the correct dependency's manifest (`META-INF/*.SF`) files as this will throw `NoClassDefFound` exception
 - "Unable to access jarfile" || jar not found
